@@ -17,7 +17,7 @@ docker compose up --build -d
 docker compose exec backend python manage.py createsuperuser
 ```
 
-Open `http://localhost:8080` for the lottery and `http://localhost:8080/admin/` for administration. Players only press **Spin**; there is no access code.
+Open `http://localhost:8081/event-lottery/` for the lottery and `http://localhost:8081/event-lottery/admin/` for administration. Players only press **Spin**; there is no access code. The Docker port is bound to `127.0.0.1` by default for use behind the host Nginx server.
 
 Docker Compose uses `10.250.77.0/24` for this project's network, so it can start on hosts whose default Docker subnet pools are exhausted. If that subnet is already used on your host, set `LOTTERY_SUBNET` in `.env` to an unused `/24` before starting the containers.
 
@@ -27,7 +27,15 @@ The admin page shows the 200-spin limit, valid draws, available slots, and total
 
 Earlier outcomes are deactivated when this campaign is installed; existing draw history is preserved. The campaign setup is a one-time database migration, so restarting containers does not reset used spins.
 
-For a tablet on the local network, open `http://YOUR-COMPUTER-IP:8080`. Add that IP to `DJANGO_ALLOWED_HOSTS` in `.env` and recreate the containers with `docker compose up -d --force-recreate`. Change `APP_PORT` if needed.
+For a tablet, use `https://haldaniko.com.ua/event-lottery/`. If direct access by local IP is needed instead, set `APP_BIND_ADDRESS=0.0.0.0`, add the server IP to `DJANGO_ALLOWED_HOSTS`, and recreate the frontend container.
+
+## VPS route on haldaniko.com.ua
+
+Set `APP_PORT=8081`, `DJANGO_ALLOWED_HOSTS=haldaniko.com.ua,localhost,127.0.0.1`, and `DJANGO_CSRF_TRUSTED_ORIGINS=https://haldaniko.com.ua` in the VPS `.env`. `DJANGO_ALLOWED_HOSTS` contains hostnames only, without `https://`.
+
+Add the two locations from [`deploy/haldaniko-event-lottery.nginx.conf`](deploy/haldaniko-event-lottery.nginx.conf) inside the existing HTTPS `server` block for `haldaniko.com.ua`. Keep the existing site's `/`, `/api/`, `/admin/`, and `/static/` locations. The lottery's requests stay under `/event-lottery/` and are forwarded to port 8081 without removing that prefix; the container handles it.
+
+After `docker compose up -d --build`, run `sudo nginx -t` and `sudo systemctl reload nginx`. The public URLs are `https://haldaniko.com.ua/event-lottery/` and `https://haldaniko.com.ua/event-lottery/admin/`.
 
 Useful commands:
 
@@ -60,7 +68,7 @@ npm install
 npm run dev
 ```
 
-The frontend runs at `http://localhost:5173`; Django Admin runs at `http://localhost:8000/admin/`. For public deployment, use HTTPS and configure `DJANGO_ALLOWED_HOSTS` and, when needed, `DJANGO_CSRF_TRUSTED_ORIGINS`. PostgreSQL is recommended for many tablets drawing simultaneously.
+The frontend runs at `http://localhost:5173/event-lottery/`; the standalone Django Admin runs at `http://localhost:8000/admin/`. PostgreSQL is recommended for many tablets drawing simultaneously.
 
 ## Checks
 

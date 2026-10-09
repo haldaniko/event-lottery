@@ -8,6 +8,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.environ.get("DJANGO_SECRET_KEY", "development-only-change-me")
 DEBUG = os.environ.get("DJANGO_DEBUG", "1") == "1"
 ALLOWED_HOSTS = os.environ.get("DJANGO_ALLOWED_HOSTS", "localhost,127.0.0.1").split(",")
+FORCE_SCRIPT_NAME = os.environ.get("DJANGO_SCRIPT_NAME", "").rstrip("/") or None
 
 INSTALLED_APPS = [
     "django.contrib.admin",
@@ -75,8 +76,13 @@ LOTTERY_SPIN_LIMIT = 200
 TIME_ZONE = "Europe/Sofia"
 USE_I18N = True
 USE_TZ = True
-STATIC_URL = "/static/"
+STATIC_URL = f"{FORCE_SCRIPT_NAME}/static/" if FORCE_SCRIPT_NAME else "/static/"
 STATIC_ROOT = BASE_DIR / "staticfiles"
+if FORCE_SCRIPT_NAME:
+    SESSION_COOKIE_NAME = "lottery_sessionid"
+    CSRF_COOKIE_NAME = "lottery_csrftoken"
+    SESSION_COOKIE_PATH = f"{FORCE_SCRIPT_NAME}/"
+    CSRF_COOKIE_PATH = f"{FORCE_SCRIPT_NAME}/"
 STORAGES = {
     "default": {"BACKEND": "django.core.files.storage.FileSystemStorage"},
     "staticfiles": {"BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage"},

@@ -27,6 +27,7 @@ type Phase = 'ready' | 'spinning' | 'result'
 const DRAW_STORAGE = 'lottery-last-result'
 const REQUEST_STORAGE = 'lottery-pending-draw'
 const SPIN_DURATION = 4200
+const APP_BASE = import.meta.env.BASE_URL
 
 function savedDraw(): Draw | null {
   try {
@@ -69,7 +70,7 @@ function App() {
 
   const refresh = useCallback(async () => {
     try {
-      const response = await fetch('/api/lottery/', { cache: 'no-store' })
+      const response = await fetch(`${APP_BASE}api/lottery/`, { cache: 'no-store' })
       if (!response.ok) throw new Error('Could not load the lottery. Please try again.')
       setLottery(await response.json() as Lottery)
       setError('')
@@ -115,7 +116,7 @@ function App() {
       const requestId = requestRef.current || crypto.randomUUID()
       requestRef.current = requestId
       sessionStorage.setItem(REQUEST_STORAGE, requestId)
-      const response = await fetch('/api/draw/', {
+      const response = await fetch(`${APP_BASE}api/draw/`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -179,7 +180,7 @@ function App() {
   return (
     <div className="app">
       <header className="topbar">
-        <a className="text-link" href="/admin/" target="_blank" rel="noreferrer">Admin</a>
+        <a className="text-link" href={`${APP_BASE}admin/`} target="_blank" rel="noreferrer">Admin</a>
       </header>
 
       <main className="main-content">
