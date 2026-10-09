@@ -1,0 +1,176 @@
+:root {
+  font-family: "Titillium Web", sans-serif;
+  color: #fff;
+  background: #12355b;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+}
+
+* { box-sizing: border-box; }
+body { margin: 0; min-width: 320px; }
+button, input { font: inherit; }
+button { cursor: pointer; }
+
+.app {
+  min-height: 100dvh;
+  background: #12355b url("./assets/background.png") center center / cover no-repeat;
+}
+.topbar {
+  height: 48px;
+  max-width: 1160px;
+  margin: auto;
+  padding: 0 28px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  font-size: 18px;
+  font-weight: 700;
+}
+.text-link {
+  padding: 6px 13px;
+  border: 0;
+  border-radius: 6px;
+  background: #fffffff0;
+  color: #12355b;
+  text-decoration: none;
+  font-size: 13px;
+  font-weight: 500;
+}
+.text-link:hover { background: #fff; text-decoration: underline; }
+
+.main-content {
+  min-height: calc(100dvh - 48px);
+  padding: 0 20px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  text-align: center;
+}
+.wheel-stage {
+  --brand-size: clamp(70px, 13vw, 160px);
+  --stage-gap: clamp(12px, 2vw, 32px);
+  --wheel-size: min(68vw, 720px, calc(100dvh - 300px), calc(100vw - var(--brand-size) - var(--brand-size) - var(--stage-gap) - var(--stage-gap) - 64px));
+  --wheel-label-size: clamp(58px, calc(var(--wheel-size) * .18), 100px);
+  display: grid;
+  grid-template-columns: var(--brand-size) var(--wheel-size) var(--brand-size);
+  align-items: center;
+  gap: var(--stage-gap);
+  margin-bottom: clamp(12px, 1.8vw, 18px);
+}
+.brand-logo-primary { width: var(--brand-size); height: var(--brand-size); object-fit: contain; }
+.brand-mark { position: relative; width: var(--brand-size); height: var(--brand-size); overflow: hidden; border-radius: clamp(6px, 1vw, 10px); }
+.brand-logo-secondary { position: absolute; width: calc(var(--brand-size) * 1.486); max-width: none; height: auto; left: calc(var(--brand-size) * -.226); top: calc(var(--brand-size) * -.192); }
+h1 { margin: 0 0 12px; font-size: clamp(26px, 3.4vw, 42px); letter-spacing: -.025em; line-height: 1.1; }
+
+.wheel-wrap {
+  width: var(--wheel-size);
+  height: var(--wheel-size);
+  position: relative;
+}
+.wheel {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  border: clamp(5px, calc(var(--wheel-size) * .012), 8px) solid white;
+  position: relative;
+  box-shadow: 0 0 0 2px #ffffff8c, 0 12px 32px #081d3799;
+  transition: transform 4.2s cubic-bezier(.12,.72,.08,1);
+  will-change: transform;
+}
+.wheel-pointer {
+  --pointer-width: clamp(9px, calc(var(--wheel-size) * .025), 14px);
+  position: absolute;
+  z-index: 2;
+  left: 50%;
+  top: calc(var(--pointer-width) * -.8);
+  transform: translateX(-50%);
+  width: 0;
+  height: 0;
+  border-left: var(--pointer-width) solid transparent;
+  border-right: var(--pointer-width) solid transparent;
+  border-top: calc(var(--pointer-width) * 2) solid #fec601;
+}
+.wheel-item {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: var(--wheel-label-size);
+  margin-left: calc(var(--wheel-label-size) * -.5);
+  margin-top: calc(var(--wheel-label-size) * -.26);
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  line-height: 1.15;
+  color: #12355b;
+}
+.wheel-item span { font-size: clamp(18px, calc(var(--wheel-size) * .052), 29px); }
+.wheel-item--small span { font-size: clamp(13px, calc(var(--wheel-size) * .034), 18px); }
+.wheel-item small {
+  margin-top: clamp(3px, calc(var(--wheel-size) * .009), 5px);
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: clamp(7px, calc(var(--wheel-size) * .019), 10px);
+  font-weight: 700;
+}
+.wheel-center {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: grid;
+  place-items: center;
+  width: clamp(48px, calc(var(--wheel-size) * .15), 82px);
+  height: clamp(48px, calc(var(--wheel-size) * .15), 82px);
+  border-radius: 50%;
+  border: clamp(3px, calc(var(--wheel-size) * .009), 5px) solid white;
+  background: #12355b;
+  box-shadow: 0 2px 8px #1d3a2d2b;
+}
+
+.primary-button {
+  min-width: clamp(180px, 24vw, 255px);
+  min-height: clamp(48px, 5.6vw, 58px);
+  padding: clamp(10px, 1.4vw, 14px) clamp(20px, 2.7vw, 28px);
+  border: 0;
+  border-radius: 8px;
+  background: #fec601;
+  color: #12355b;
+  font-size: clamp(14px, 1.7vw, 16px);
+  font-weight: 700;
+  transition: background .2s;
+}
+.primary-button:hover:not(:disabled) { background: #ffdb42; }
+.primary-button:disabled { opacity: .55; cursor: default; }
+
+.result { display: flex; align-items: center; flex-direction: column; }
+.result h2 { margin: 0 0 7px; font-size: clamp(20px, 3vw, 30px); }
+.result p { margin: 0 0 7px; color: #fff; font-size: clamp(12px, 1.4vw, 14px); }
+.result small { margin-bottom: clamp(12px, 2vw, 20px); color: #ffffffc7; font-size: 12px; }
+.error { margin-top: 18px; padding: 7px 10px; border-radius: 5px; background: #fff; color: #a63d35; font-size: 13px; }
+.error button { border: 0; background: none; color: inherit; text-decoration: underline; }
+
+@media (min-width: 701px) and (max-width: 1100px) {
+  .topbar { padding: 0 20px; }
+  .main-content { padding: 0 16px 16px; }
+  .wheel-stage {
+    --brand-size: clamp(72px, 10vw, 110px);
+    --stage-gap: clamp(12px, 1.8vw, 20px);
+    --wheel-size: min(62vw, 680px, calc(100dvh - 300px), calc(100vw - var(--brand-size) - var(--brand-size) - var(--stage-gap) - var(--stage-gap) - 48px));
+  }
+}
+
+@media (max-width: 700px) {
+  .topbar { height: 48px; padding: 0 16px; font-size: 16px; }
+  .text-link { font-size: 12px; }
+  .main-content { min-height: calc(100dvh - 48px); padding: 4px 12px 20px; }
+  .wheel-stage { --brand-size: clamp(46px, 15vw, 70px); --wheel-size: min(90vw, 440px, calc(100dvh - 290px)); display: block; position: relative; }
+  .brand-logo-primary, .brand-mark { position: absolute; z-index: 3; top: 7%; }
+  .brand-logo-primary { left: 0; }
+  .brand-mark { right: 0; }
+  .result p { max-width: 280px; line-height: 1.45; }
+}
+

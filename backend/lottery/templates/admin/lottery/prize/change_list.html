@@ -1,0 +1,24 @@
+{% extends "admin/change_list.html" %}
+
+{% block content %}
+<style>
+  .lottery-summary { display: flex; flex-wrap: wrap; gap: 12px; margin: 0 0 18px; }
+  .lottery-stat { min-width: 135px; padding: 13px 18px; border: 1px solid var(--hairline-color); border-radius: 8px; background: var(--body-bg); }
+  .lottery-stat strong { display: block; font-size: 25px; line-height: 1.2; color: var(--body-fg); }
+  .lottery-stat span { color: var(--body-quiet-color); }
+  .lottery-guide { margin: 0 0 18px; padding: 12px 16px; border-radius: 8px; background: var(--darkened-bg); }
+  .lottery-warning { border-left: 4px solid #d89919; }
+</style>
+<div class="lottery-summary">
+  <div class="lottery-stat"><strong>{{ spin_limit }}</strong><span>Total spins</span></div>
+  <div class="lottery-stat"><strong>{{ spins_used }}</strong><span>Used</span></div>
+  <div class="lottery-stat"><strong>{{ slots_left }}</strong><span>Available slots</span></div>
+  <div class="lottery-stat"><strong>{{ stock_total }}</strong><span>Category stock</span></div>
+</div>
+<div class="lottery-guide{% if not stock_matches %} lottery-warning{% endif %}">
+  Set each category's remaining quantity below and click <strong>Save</strong>. “No prize” is a category that runs out like any gift.
+  {% if not stock_matches %}<br><strong>Stock and available slots differ.</strong> Adjust the active category quantities so they add up to {{ slots_left }}. The lottery stops after {{ spin_limit }} valid draws.{% endif %}
+  <br>To undo an accidental extra spin, open <a href="{{ draw_history_url }}">Draw history</a> and use “Cancel selected draws and return their outcomes”.
+</div>
+{{ block.super }}
+{% endblock %}

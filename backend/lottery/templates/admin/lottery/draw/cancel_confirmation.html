@@ -1,0 +1,22 @@
+{% extends "admin/base_site.html" %}
+
+{% block content %}
+<p>These draws will be marked as cancelled. One outcome per draw will be returned to its category, and the available spin count will increase by the same amount.</p>
+<ul>
+  {% for draw in draws %}
+  <li><strong>{{ draw.prize_name }}</strong> — {{ draw.created_at }} — #{{ draw.id }}</li>
+  {% endfor %}
+</ul>
+<form method="post" action="">
+  {% csrf_token %}
+  <input type="hidden" name="action" value="cancel_selected_draws">
+  <input type="hidden" name="index" value="0">
+  {% for draw in draws %}<input type="hidden" name="_selected_action" value="{{ draw.pk }}">{% endfor %}
+  <div style="margin: 18px 0;">
+    <label for="id_reason"><strong>Reason (optional)</strong></label><br>
+    <input id="id_reason" name="reason" type="text" maxlength="240" style="width: min(100%, 450px);">
+  </div>
+  <button type="submit" name="confirm" value="yes" class="default">Cancel draws and return outcomes</button>
+  <a href="{% url 'admin:lottery_draw_changelist' %}">Go back</a>
+</form>
+{% endblock %}
