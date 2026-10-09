@@ -30,3 +30,9 @@ services:
 
 volumes:
   lottery_data:
+
+networks:
+  default:
+    ipam:
+      config:
+        - subnet: ${LOTTERY_SUBNET:-10.250.77.0/24}

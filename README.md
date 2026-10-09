@@ -19,6 +19,8 @@ docker compose exec backend python manage.py createsuperuser
 
 Open `http://localhost:8080` for the lottery and `http://localhost:8080/admin/` for administration. Players only press **Spin**; there is no access code.
 
+Docker Compose uses `10.250.77.0/24` for this project's network, so it can start on hosts whose default Docker subnet pools are exhausted. If that subnet is already used on your host, set `LOTTERY_SUBNET` in `.env` to an unused `/24` before starting the containers.
+
 The initial pool contains exactly **200 spins**: 140 no-prize results, 50 small gifts, 5 keyboards, and 5 headphones. Each draw consumes one outcome. In **Draw categories** in Django Admin, edit the remaining quantities directly in the table and click **Save**. Add categories with **Add draw category**. “No prize” is a category with its own finite quantity. A disabled or exhausted category cannot be drawn. Each category has chance weight 1, so its chance follows its remaining quantity. Keyboard and headphone sectors have a slightly larger visual size; this display setting is excluded from the server's draw calculation.
 
 The admin page shows the 200-spin limit, valid draws, available slots, and total active category stock. Keep category stock equal to available slots. The API enforces the 200-spin limit even if stock is accidentally set too high. To correct an accidental extra spin, open **Draw history**, select the draw, and choose **Cancel selected draws and return their outcomes**. Confirming the action restores its category stock and one available spin; the cancelled draw remains in history. Repeating the action cannot restore the same draw twice.
